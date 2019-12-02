@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">KotlinAppPractice</string>
+    <string name="app_name">Dice Roller</string>
+
+    <string name="roll_text">Roll</string>
 </resources>
