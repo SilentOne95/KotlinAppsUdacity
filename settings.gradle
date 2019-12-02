@@ -1,2 +1,2 @@
-include ':diceroller'
+include ':diceroller', ':aboutme'
 rootProject.name='KotlinAppPractice'
