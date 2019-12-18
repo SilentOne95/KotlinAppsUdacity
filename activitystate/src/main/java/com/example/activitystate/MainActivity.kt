@@ -12,10 +12,15 @@ import androidx.lifecycle.LifecycleObserver
 import com.example.activitystate.databinding.ActivityMainBinding
 import timber.log.Timber
 
+const val KEY_REVENUE = "key_revenue"
+const val KEY_DESSERT_SOLD = "key_dessert_sold"
+const val KEY_TIMER = "key_timer"
+
 class MainActivity : AppCompatActivity(), LifecycleObserver {
 
     private var revenue = 0
     private var dessertsSold = 0
+    private lateinit var timer: Timer
 
     // Contains all the views
     private lateinit var binding: ActivityMainBinding
@@ -56,6 +61,15 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
 
         binding.dessertButton.setOnClickListener {
             onDessertClicked()
+        }
+
+        timer = Timer(this.lifecycle)
+
+        if (savedInstanceState != null) {
+            revenue = savedInstanceState.getInt(KEY_REVENUE)
+            dessertsSold = savedInstanceState.getInt(KEY_DESSERT_SOLD)
+            timer.secondsCount = savedInstanceState.getInt(KEY_TIMER)
+            showCurrentDessert()
         }
 
         // Set the TextViews to the right values
@@ -131,6 +145,14 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
             R.id.shareMenuButton -> onShare()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt(KEY_REVENUE, revenue)
+        outState.putInt(KEY_DESSERT_SOLD, dessertsSold)
+        outState.putInt(KEY_TIMER, timer.secondsCount)
+        Timber.i("onSaveInstanceState called")
+        super.onSaveInstanceState(outState)
     }
 
     override fun onStart() {
