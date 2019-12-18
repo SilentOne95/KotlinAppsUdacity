@@ -1,2 +1,2 @@
-include ':diceroller', ':aboutme', ':colormyviews', ':navapp', ':activitystate'
+include ':diceroller', ':aboutme', ':colormyviews', ':navapp', ':activitystate', ':architectureapp'
 rootProject.name='KotlinAppPractice'
