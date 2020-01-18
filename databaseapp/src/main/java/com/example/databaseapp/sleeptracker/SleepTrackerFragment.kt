@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.databaseapp.R
 import com.example.databaseapp.database.SleepDatabase
 import com.example.databaseapp.databinding.FragmentSleepTrackerBinding
@@ -41,17 +42,28 @@ class SleepTrackerFragment : Fragment() {
         val sleepTrackerViewModel =
             ViewModelProviders.of(this, viewModelFactory).get(SleepTrackerViewModel::class.java)
 
-        val adapter = SleepNightAdapter()
+        binding.sleepTrackerViewModel = sleepTrackerViewModel
+        binding.setLifecycleOwner(this)
+
+        val manager = GridLayoutManager(activity, 3)
+        manager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int) = when (position) {
+                0 -> 3
+                else -> 1
+            }
+        }
+        binding.sleepList.layoutManager = manager
+
+        val adapter = SleepNightAdapter(SleepNightListener { nightId ->
+            sleepTrackerViewModel.onSleepNightClicked(nightId)
+        })
         binding.sleepList.adapter = adapter
 
         sleepTrackerViewModel.nights.observe(viewLifecycleOwner, Observer {
             it?.let {
-                adapter.submitList(it)
+                adapter.addHeaderAndSubmitList(it)
             }
         })
-
-        binding.setLifecycleOwner(this)
-        binding.sleepTrackerViewModel = sleepTrackerViewModel
 
         sleepTrackerViewModel.navigateToSleepQuality.observe(this, Observer { night ->
             night?.let {
@@ -61,6 +73,16 @@ class SleepTrackerFragment : Fragment() {
                     )
                 )
                 sleepTrackerViewModel.doneNavigating()
+            }
+        })
+
+        sleepTrackerViewModel.navigateToSleepDataQuality.observe(this, Observer { night ->
+            night?.let {
+                this.findNavController().navigate(
+                    SleepTrackerFragmentDirections
+                        .actionSleepTrackerFragmentToSleepDetailFragment(night)
+                )
+                sleepTrackerViewModel.onSleepDataQualityNavigated()
             }
         })
 
