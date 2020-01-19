@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/databaseapp" />
             <option value="$PROJECT_DIR$/diceroller" />
             <option value="$PROJECT_DIR$/navapp" />
+            <option value="$PROJECT_DIR$/networkapp" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
